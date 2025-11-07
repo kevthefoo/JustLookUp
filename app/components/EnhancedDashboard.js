@@ -72,7 +72,7 @@ export default function EnhancedDashboard() {
                                 NASA Mission Control
                             </h1>
                             <p className="text-gray-300 text-sm">
-                                🌍 Live Space Data • 🚀 Streaming Ready
+                                🌍 Live Space Data
                             </p>
                         </div>
                     </div>
@@ -288,7 +288,6 @@ export default function EnhancedDashboard() {
                         <span className="text-gray-400">NASA API</span>
                     </div>
                     <div className="text-gray-400">
-                        🚀 Streaming Ready •{" "}
                         {mounted
                             ? currentTime.toLocaleTimeString()
                             : "--:--:--"}
