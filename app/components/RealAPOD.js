@@ -113,11 +113,11 @@ export default function RealAPOD() {
     }
 
     return (
-        <div className="bg-black/30 backdrop-blur-md rounded-xl overflow-hidden border border-white/10">
+        <div className="h-full bg-black/30 backdrop-blur-md rounded-xl overflow-hidden border border-white/10 flex flex-col">
             {/* API Warning Banner */}
             {error && apod && (
-                <div className="bg-amber-500/20 border-b border-amber-500/30 p-4">
-                    <p className="text-amber-300 text-sm">
+                <div className="bg-amber-500/20 border-b border-amber-500/30 p-2 shrink-0">
+                    <p className="text-amber-300 text-xs">
                         ⚠️ Showing fallback content - NASA API: {error}
                     </p>
                 </div>
