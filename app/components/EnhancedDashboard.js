@@ -79,15 +79,19 @@ export default function EnhancedDashboard() {
                     </div>
                     <div className="text-right">
                         <div className="text-3xl font-mono text-blue-400 tracking-wider">
-                            {mounted ? currentTime.toLocaleTimeString() : '--:--:--'}
+                            {mounted
+                                ? currentTime.toLocaleTimeString()
+                                : "--:--:--"}
                         </div>
                         <div className="text-sm text-gray-300">
-                            {mounted ? currentTime.toLocaleDateString("en-US", {
-                                weekday: "long",
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                            }) : 'Loading...'}
+                            {mounted
+                                ? currentTime.toLocaleDateString("en-US", {
+                                      weekday: "long",
+                                      year: "numeric",
+                                      month: "long",
+                                      day: "numeric",
+                                  })
+                                : "Loading..."}
                         </div>
                     </div>
                 </div>
@@ -273,7 +277,9 @@ export default function EnhancedDashboard() {
                     </div>
                     <div className="text-gray-400">
                         🚀 Ready for YouTube Streaming • Last updated:{" "}
-                        {mounted ? currentTime.toLocaleTimeString() : '--:--:--'}
+                        {mounted
+                            ? currentTime.toLocaleTimeString()
+                            : "--:--:--"}
                     </div>
                 </div>
             </div>
