@@ -1,0 +1,55 @@
+{
+  "fetchedAt": "2025-11-11T04:24:06.273Z",
+  "dateRange": {
+    "start": "2025-10-12",
+    "end": "2025-11-11"
+  },
+  "endpoints": [
+    {
+      "name": "cmeAnalysis",
+      "description": "Coronal Mass Ejection Analysis - Detailed analysis of CME events",
+      "recordCount": 188
+    },
+    {
+      "name": "gst",
+      "description": "Geomagnetic Storm - Disturbances in Earth's magnetosphere caused by solar wind",
+      "recordCount": 3
+    },
+    {
+      "name": "ips",
+      "description": "Interplanetary Shock - Shock waves in the solar wind",
+      "recordCount": 14
+    },
+    {
+      "name": "flr",
+      "description": "Solar Flare - Intense bursts of radiation from the release of magnetic energy",
+      "recordCount": 54
+    },
+    {
+      "name": "sep",
+      "description": "Solar Energetic Particle - High-energy particles accelerated by solar events",
+      "recordCount": 8
+    },
+    {
+      "name": "mpc",
+      "description": "Magnetopause Crossing - Spacecraft crossings of Earth's magnetopause boundary",
+      "recordCount": 1
+    },
+    {
+      "name": "rbe",
+      "description": "Radiation Belt Enhancement - Increases in radiation belt particle populations",
+      "recordCount": 3
+    },
+    {
+      "name": "hss",
+      "description": "High Speed Stream - Fast-moving streams in the solar wind",
+      "recordCount": 6
+    }
+  ],
+  "errors": [
+    {
+      "endpoint": "cme",
+      "error": "timeout of 10000ms exceeded"
+    }
+  ]
+}

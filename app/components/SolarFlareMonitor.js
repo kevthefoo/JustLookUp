@@ -83,58 +83,12 @@ const RealSolarFlareMonitor = () => {
         return { chartData, recentFlares: recentFlares.reverse() };
     }, []);
 
-    const generateFallbackData = useCallback(() => {
-        // Generate simulated data when API is unavailable
-        const data = [];
-        const recent = [];
-
-        for (let i = 29; i >= 0; i--) {
-            const date = new Date();
-            date.setDate(date.getDate() - i);
-            const dateStr = date.toISOString().split("T")[0];
-
-            const count = Math.floor(Math.random() * 8) + 1;
-            data.push({
-                date: dateStr,
-                count: count,
-                avgIntensity: Math.floor(Math.random() * 5) + 1,
-                maxIntensity: Math.floor(Math.random() * 8) + 2,
-                displayDate: date.toLocaleDateString(),
-            });
-
-            // Add some recent flares
-            if (i < 7) {
-                const flareClasses = ["C1.5", "C3.2", "M1.1", "M2.8", "X1.2"];
-                const randomClass =
-                    flareClasses[
-                        Math.floor(Math.random() * flareClasses.length)
-                    ];
-                recent.push({
-                    classType: randomClass,
-                    beginTime: date.toISOString(),
-                    peakTime: new Date(
-                        date.getTime() + 30 * 60000
-                    ).toISOString(),
-                    intensity: getFlareIntensity(randomClass),
-                    color: getFlareColor(randomClass),
-                    sourceLocation: `N${Math.floor(
-                        Math.random() * 30
-                    )}E${Math.floor(Math.random() * 60)}`,
-                });
-            }
-        }
-
-        setFlareData(data);
-        setRecentFlares(recent.slice(0, 6));
-        setLastUpdated(new Date());
-    }, []);
-
     const fetchSolarFlareData = useCallback(async () => {
         try {
             setLoading(true);
             setError(null);
 
-            // Get data for the last 30 days
+            // Get data for the last 14 days
             const endDate = new Date();
             const startDate = new Date();
             startDate.setDate(endDate.getDate() - 30);
@@ -172,12 +126,13 @@ const RealSolarFlareMonitor = () => {
             console.error("Error fetching solar flare data:", err);
             setError(err.message);
 
-            // Fallback to simulated data if API fails
-            setTimeout(() => generateFallbackData(), 0);
+            // Set empty state when API fails
+            setFlareData([]);
+            setRecentFlares([]);
         } finally {
             setLoading(false);
         }
-    }, [processFlareData, generateFallbackData]);
+    }, [processFlareData]);
 
     const getFlareIntensity = (classType) => {
         if (!classType) return 1;
@@ -224,37 +179,11 @@ const RealSolarFlareMonitor = () => {
 
     return (
         <div className="glass-panel p-6 h-full flex flex-col">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                    <div className="relative">
-                        <Sun className="w-6 h-6 text-orange-400" />
-                        <Activity className="w-3 h-3 text-red-400 absolute -top-1 -right-1" />
-                    </div>
-                    <div>
-                        <h3 className="text-xl font-bold text-white">
-                            Solar Activity Monitor
-                        </h3>
-                        <p className="text-sm text-white/60">
-                            Real NASA DONKI Data {error && "• Fallback Mode"}
-                        </p>
-                    </div>
-                </div>
-                {lastUpdated && (
-                    <div className="text-right">
-                        <p className="text-xs text-white/40 flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {lastUpdated.toLocaleTimeString()}
-                        </p>
-                    </div>
-                )}
-            </div>
-
             {error && (
-                <div className="bg-orange-500/20 border border-orange-400/30 rounded-lg p-3 mb-4">
-                    <div className="flex items-center gap-2 text-orange-300 text-sm">
+                <div className="bg-red-500/20 border border-red-400/30 rounded-lg p-3 mb-4">
+                    <div className="flex items-center gap-2 text-red-300 text-sm">
                         <AlertTriangle className="w-4 h-4" />
-                        API temporarily unavailable - showing simulated data
+                        Failed to load solar flare data: {error}
                     </div>
                 </div>
             )}
@@ -264,7 +193,7 @@ const RealSolarFlareMonitor = () => {
                 <div>
                     <h4 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
                         <TrendingUp className="w-5 h-5 text-blue-400" />
-                        30-Day Solar Flare Activity
+                        14-Day Solar Flare Activity
                     </h4>
                     <div className="h-48">
                         <ResponsiveContainer width="100%" height="100%">

@@ -59,7 +59,7 @@ export default function Dashboard() {
         { id: "mars", label: "Mars Weather", icon: Sun },
         { id: "exoplanets", label: "Exoplanets", icon: Telescope },
         { id: "events", label: "Celestial Events", icon: Calendar },
-        { id: "solar", label: "Space Weather", icon: Activity },
+        { id: "solar", label: "Solar Activity", icon: Activity },
     ];
 
     return (
