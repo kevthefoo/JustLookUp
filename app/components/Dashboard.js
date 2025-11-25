@@ -85,7 +85,7 @@ export default function Dashboard() {
         };
 
         console.log("Setting up timer for 1 second intervals");
-        const timer = setInterval(switchToNextTab, 100000); // ms
+        const timer = setInterval(switchToNextTab, 10000); // ms
 
         return () => {
             console.log("Cleaning up auto-switch timer");
