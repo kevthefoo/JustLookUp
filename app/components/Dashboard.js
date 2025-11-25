@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
     Rocket,
     Star,
@@ -9,21 +9,18 @@ import {
     Sun,
     Calendar,
     Globe,
-    Satellite,
-    Telescope,
 } from "lucide-react";
-import Header from "@/app/components/Header";
 import NEOTracker from "./NEOTracker";
 import MarsWeather from "./MarsWeather";
 import SolarFlareMonitor from "./SolarFlareMonitor";
 import AstronomicalEvents from "./AstronomicalEvents";
-
 import EclipseTracker from "./EclipseTracker";
 
 export default function Dashboard() {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [activeSection, setActiveSection] = useState("overview");
     const [mounted, setMounted] = useState(false);
+    const [isAutoSwitching, setIsAutoSwitching] = useState(true);
     const [liveStats, setLiveStats] = useState({
         issAstronauts: 7,
         solarWindSpeed: 425,
@@ -36,6 +33,18 @@ export default function Dashboard() {
         const timer = setInterval(() => setCurrentTime(new Date()), 1000);
         return () => clearInterval(timer);
     }, []);
+
+    const sections = useMemo(
+        () => [
+            { id: "overview", label: "Mission Control", icon: Star },
+            { id: "solar", label: "Solar Activity", icon: Activity },
+            { id: "mars", label: "Mars Weather", icon: Sun },
+            { id: "asteroids", label: "Asteroid Watch", icon: AlertTriangle },
+            { id: "events", label: "Celestial Events", icon: Calendar },
+            { id: "eclipses", label: "Eclipse Tracker", icon: Globe },
+        ],
+        []
+    );
 
     // Simulate some live data updates
     useEffect(() => {
@@ -50,14 +59,55 @@ export default function Dashboard() {
         return () => clearInterval(interval);
     }, []);
 
-    const sections = [
-        { id: "overview", label: "Mission Control", icon: Star },
-        { id: "solar", label: "Solar Activity", icon: Activity },
-        { id: "mars", label: "Mars Weather", icon: Sun },
-        { id: "asteroids", label: "Asteroid Watch", icon: AlertTriangle },
-        { id: "events", label: "Celestial Events", icon: Calendar },
-        { id: "eclipses", label: "Eclipse Tracker", icon: Globe },
-    ];
+    // Auto-switch tabs every 2 minutes
+    useEffect(() => {
+        console.log(
+            "Auto-switch effect running. isAutoSwitching:",
+            isAutoSwitching
+        );
+        if (!isAutoSwitching) {
+            console.log("Auto-switching is disabled");
+            return;
+        }
+
+        const switchToNextTab = () => {
+            console.log("Switching to next tab...");
+            setActiveSection((currentSection) => {
+                const currentIndex = sections.findIndex(
+                    (section) => section.id === currentSection
+                );
+                const nextIndex = (currentIndex + 1) % sections.length;
+                console.log(
+                    `Switching from ${currentSection} to ${sections[nextIndex].id}`
+                );
+                return sections[nextIndex].id;
+            });
+        };
+
+        console.log("Setting up timer for 1 second intervals");
+        const timer = setInterval(switchToNextTab, 10000); // ms
+
+        return () => {
+            console.log("Cleaning up auto-switch timer");
+            clearInterval(timer);
+        };
+    }, [isAutoSwitching, sections]);
+
+    // Handle manual tab switching - disable auto-switch temporarily
+    const handleManualTabSwitch = (sectionId) => {
+        console.log("Manual tab switch to:", sectionId);
+        setActiveSection(sectionId);
+
+        // Temporarily disable auto-switching for testing - only 3 seconds
+        console.log("Disabling auto-switch for 3 seconds");
+        setIsAutoSwitching(false);
+
+        // Re-enable auto-switching after 3 seconds for testing
+        setTimeout(() => {
+            console.log("Re-enabling auto-switch");
+            setIsAutoSwitching(true);
+        }, 3000); // 3 seconds
+    };
 
     return (
         <div className="h-screen overflow-hidden p-3 text-white flex flex-col">
@@ -71,7 +121,9 @@ export default function Dashboard() {
                         return (
                             <button
                                 key={section.id}
-                                onClick={() => setActiveSection(section.id)}
+                                onClick={() =>
+                                    handleManualTabSwitch(section.id)
+                                }
                                 className={`flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 ${
                                     activeSection === section.id
                                         ? "bg-linear-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/25"
@@ -273,6 +325,19 @@ export default function Dashboard() {
                         </div>
                         <span className="text-gray-500">•</span>
                         <span className="text-gray-400">NASA API</span>
+                        <span className="text-gray-500">•</span>
+                        <div className="flex items-center gap-1">
+                            <div
+                                className={`w-2 h-2 rounded-full ${
+                                    isAutoSwitching
+                                        ? "bg-blue-400 animate-pulse"
+                                        : "bg-gray-500"
+                                }`}
+                            ></div>
+                            <span className="text-gray-400">
+                                {isAutoSwitching ? "Auto-Switch" : "Manual"}
+                            </span>
+                        </div>
                     </div>
                     <div className="text-gray-400">
                         {mounted
